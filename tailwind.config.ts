@@ -47,6 +47,26 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        "job-seeker": {
+          DEFAULT: "hsl(var(--job-seeker))",
+          foreground: "hsl(var(--job-seeker-foreground))",
+        },
+        employer: {
+          DEFAULT: "hsl(var(--employer))",
+          foreground: "hsl(var(--employer-foreground))",
+        },
+        franchise: {
+          DEFAULT: "hsl(var(--franchise))",
+          foreground: "hsl(var(--franchise-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
