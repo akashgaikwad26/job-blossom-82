@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,8 +16,10 @@ import {
   CheckCircle2,
   Target
 } from "lucide-react";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 const JobSeekerDashboard = () => {
+  const { t } = useTranslation();
   const profileCompleteness = 75;
   const preparednessScore = 82;
 
@@ -65,17 +68,18 @@ const JobSeekerDashboard = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8 animate-fade-in">
           <div>
-            <h1 className="text-3xl font-bold">Welcome back, Alex!</h1>
-            <p className="text-muted-foreground">Let's find your next opportunity</p>
+            <h1 className="text-3xl font-bold">{t("dashboard.jobSeeker.welcome")}</h1>
+            <p className="text-muted-foreground">{t("dashboard.jobSeeker.subtitle")}</p>
           </div>
           <div className="flex gap-3">
+            <LanguageSwitcher />
             <Button variant="outline" size="sm">
               <Search className="w-4 h-4 mr-2" />
-              Browse Jobs
+              {t("dashboard.jobSeeker.browseJobs")}
             </Button>
             <Button size="sm">
               <Target className="w-4 h-4 mr-2" />
-              Complete Profile
+              {t("dashboard.jobSeeker.completeProfile")}
             </Button>
           </div>
         </div>

@@ -1,56 +1,44 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { UserCircle, Building2, Users, ArrowRight, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const RoleSelection = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<string>("");
 
   const roles = [
     {
       id: "job-seeker",
-      title: "Job Seeker",
-      description: "Find your dream job with personalized recommendations",
+      title: t("roleSelection.roles.jobSeeker.title"),
+      description: t("roleSelection.roles.jobSeeker.description"),
       icon: UserCircle,
       color: "job-seeker",
-      features: [
-        "AI-powered job matching",
-        "Skill assessments & certificates",
-        "Interview preparation tools",
-        "Career progression tracking"
-      ],
-      stats: "5,000+ active positions"
+      features: t("roleSelection.roles.jobSeeker.features", { returnObjects: true }) as string[],
+      stats: t("roleSelection.roles.jobSeeker.stats")
     },
     {
       id: "employer",
-      title: "Employer",
-      description: "Find the perfect candidates for your organization",
+      title: t("roleSelection.roles.employer.title"),
+      description: t("roleSelection.roles.employer.description"),
       icon: Building2,
       color: "employer",
-      features: [
-        "Advanced candidate filtering",
-        "Skill-based assessments",
-        "Applicant tracking system",
-        "Company branding tools"
-      ],
-      stats: "2,000+ companies trust us"
+      features: t("roleSelection.roles.employer.features", { returnObjects: true }) as string[],
+      stats: t("roleSelection.roles.employer.stats")
     },
     {
       id: "franchise",
-      title: "Franchise Partner",
-      description: "Expand our network and earn with every placement",
+      title: t("roleSelection.roles.franchise.title"),
+      description: t("roleSelection.roles.franchise.description"),
       icon: Users,
       color: "franchise",
-      features: [
-        "Territory management",
-        "Commission tracking",
-        "Local job market insights",
-        "Marketing support & tools"
-      ],
-      stats: "500+ franchise locations"
+      features: t("roleSelection.roles.franchise.features", { returnObjects: true }) as string[],
+      stats: t("roleSelection.roles.franchise.stats")
     }
   ];
 
@@ -64,10 +52,15 @@ const RoleSelection = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div></div>
+          <LanguageSwitcher />
+        </div>
+        
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-bold mb-4">Choose Your Role</h1>
+          <h1 className="text-4xl font-bold mb-4">{t("roleSelection.title")}</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Select how you'd like to use JobConnect to get personalized features and content
+            {t("roleSelection.description")}
           </p>
         </div>
 
@@ -118,12 +111,12 @@ const RoleSelection = () => {
             disabled={!selectedRole}
             onClick={handleContinue}
           >
-            Continue as {selectedRole ? roles.find(r => r.id === selectedRole)?.title : "..."}
+            {t("roleSelection.continue")} {selectedRole ? roles.find(r => r.id === selectedRole)?.title : "..."}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           {selectedRole && (
             <p className="text-sm text-muted-foreground mt-4">
-              You can change your role anytime in settings
+              {t("roleSelection.changeRole")}
             </p>
           )}
         </div>
