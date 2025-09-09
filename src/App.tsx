@@ -9,6 +9,9 @@ import WelcomeScreen from "./components/WelcomeScreen";
 import RoleSelection from "./components/RoleSelection";
 import Dashboard from "./components/Dashboard";
 import JobListings from "./components/JobListings";
+import { RegistrationForm } from "./components/forms/RegistrationForm";
+import { JobApplicationForm } from "./components/forms/JobApplicationForm";
+import { JobPostingForm } from "./components/forms/JobPostingForm";
 
 const queryClient = new QueryClient();
 
@@ -20,9 +23,12 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<WelcomeScreen />} />
+          <Route path="/register" element={<RegistrationForm />} />
           <Route path="/role-selection" element={<RoleSelection />} />
           <Route path="/dashboard/:role" element={<Dashboard />} />
           <Route path="/jobs" element={<JobListings />} />
+          <Route path="/jobs/apply/:jobId" element={<JobApplicationForm />} />
+          <Route path="/jobs/post" element={<JobPostingForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
