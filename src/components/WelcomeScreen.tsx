@@ -102,6 +102,25 @@ const WelcomeScreen = () => {
               </CardContent>
             </Card>
 
+            {/* Registration Button */}
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="flex-1 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300"
+                onClick={() => navigate("/register")}
+              >
+                {t("auth.register.title", "Create Account")}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="flex-1 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300"
+              >
+                {t("auth.login.title", "Sign In")}
+              </Button>
+            </div>
+
             {/* Features Grid */}
             <div className="grid grid-cols-2 gap-4">
               {features.map((feature, index) => (
