@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTranslation } from 'react-i18next';
-import { User, Mail, Phone, MapPin, Briefcase } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Briefcase, Wrench, Star } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 interface RegistrationFormData {
   fullName: string;
@@ -16,6 +17,8 @@ interface RegistrationFormData {
   location: string;
   experience?: string;
   companyName?: string;
+  profession?: string;
+  skills?: string;
 }
 
 export const RegistrationForm = () => {
@@ -130,22 +133,65 @@ export const RegistrationForm = () => {
             </div>
 
             {selectedRole === 'jobSeeker' && (
-              <div className="space-y-2">
-                <Label htmlFor="experience">
-                  {t('auth.fields.experience', 'Experience')}
-                </Label>
-                <Select onValueChange={(value) => register('experience').onChange({ target: { value } })}>
-                  <SelectTrigger className="transition-smooth">
-                    <SelectValue placeholder={t('auth.placeholders.experience', 'Select experience level')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="fresher">Fresher</SelectItem>
-                    <SelectItem value="1-2">1-2 Years</SelectItem>
-                    <SelectItem value="3-5">3-5 Years</SelectItem>
-                    <SelectItem value="5+">5+ Years</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="experience">
+                    {t('auth.fields.experience', 'Experience')}
+                  </Label>
+                  <Select onValueChange={(value) => register('experience').onChange({ target: { value } })}>
+                    <SelectTrigger className="transition-smooth bg-background">
+                      <SelectValue placeholder={t('auth.placeholders.experience', 'Select experience level')} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border z-50">
+                      <SelectItem value="fresher">Fresher</SelectItem>
+                      <SelectItem value="1-2">1-2 Years</SelectItem>
+                      <SelectItem value="3-5">3-5 Years</SelectItem>
+                      <SelectItem value="5+">5+ Years</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="profession" className="flex items-center gap-2">
+                    <Wrench className="w-4 h-4" />
+                    {t('auth.fields.profession', 'Profession')}
+                  </Label>
+                  <Select onValueChange={(value) => register('profession').onChange({ target: { value } })}>
+                    <SelectTrigger className="transition-smooth bg-background">
+                      <SelectValue placeholder={t('auth.placeholders.profession', 'Select your profession')} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border z-50">
+                      <SelectItem value="plumber">Plumber</SelectItem>
+                      <SelectItem value="electrician">Electrician</SelectItem>
+                      <SelectItem value="carpenter">Carpenter</SelectItem>
+                      <SelectItem value="painter">Painter</SelectItem>
+                      <SelectItem value="mechanic">Mechanic</SelectItem>
+                      <SelectItem value="welder">Welder</SelectItem>
+                      <SelectItem value="mason">Mason</SelectItem>
+                      <SelectItem value="driver">Driver</SelectItem>
+                      <SelectItem value="security-guard">Security Guard</SelectItem>
+                      <SelectItem value="cleaner">Cleaner</SelectItem>
+                      <SelectItem value="cook">Cook</SelectItem>
+                      <SelectItem value="gardener">Gardener</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="skills" className="flex items-center gap-2">
+                    <Star className="w-4 h-4" />
+                    {t('auth.fields.skills', 'Skills')}
+                  </Label>
+                  <Textarea
+                    id="skills"
+                    {...register('skills')}
+                    placeholder={t('auth.placeholders.skills', 'List your skills (e.g., pipe fitting, electrical wiring, tile work)')}
+                    className="transition-smooth min-h-[80px]"
+                    rows={3}
+                  />
+                </div>
+              </>
             )}
 
             {selectedRole === 'employer' && (
