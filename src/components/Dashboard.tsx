@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import JobSeekerDashboard from "./dashboards/JobSeekerDashboard";
 import EmployerDashboard from "./dashboards/EmployerDashboard";
 import FranchiseDashboard from "./dashboards/FranchiseDashboard";
+import AdminDashboard from "./dashboards/AdminDashboard";
 
 const Dashboard = () => {
   const { role } = useParams<{ role: string }>();
@@ -14,6 +15,8 @@ const Dashboard = () => {
         return <EmployerDashboard />;
       case "franchise":
         return <FranchiseDashboard />;
+      case "admin":
+        return <AdminDashboard />;
       default:
         return (
           <div className="min-h-screen flex items-center justify-center">

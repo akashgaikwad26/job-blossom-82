@@ -108,7 +108,7 @@ const WelcomeScreen = () => {
                 variant="outline" 
                 size="lg"
                 className="flex-1 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/register-multistep")}
               >
                 {t("auth.register.title", "Create Account")}
               </Button>
