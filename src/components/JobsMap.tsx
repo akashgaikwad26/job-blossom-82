@@ -110,45 +110,47 @@ const JobsMap = () => {
             zoom={11}
             style={{ height: '100%', width: '100%' }}
           >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            
-            {/* User location marker */}
-            <Marker position={userLocation} icon={userIcon}>
-              <Popup>
-                <div className="text-center">
-                  <strong>Your Location</strong>
-                  <br />
-                  Bandra, Mumbai
-                </div>
-              </Popup>
-            </Marker>
-
-            {/* Job markers */}
-            {nearbyJobs.map((job) => (
-              <Marker key={job.id} position={job.coordinates} icon={jobIcon}>
+            <>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              
+              {/* User location marker */}
+              <Marker position={userLocation} icon={userIcon}>
                 <Popup>
-                  <div className="min-w-[200px]">
-                    <h3 className="font-semibold text-sm mb-1">{job.title}</h3>
-                    <p className="text-xs text-gray-600 mb-2">{job.company}</p>
-                    <div className="flex items-center gap-2 text-xs mb-2">
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        {job.location}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-medium">{job.salary}</span>
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                        {job.type}
-                      </span>
-                    </div>
+                  <div className="text-center">
+                    <strong>Your Location</strong>
+                    <br />
+                    Bandra, Mumbai
                   </div>
                 </Popup>
               </Marker>
-            ))}
+
+              {/* Job markers */}
+              {nearbyJobs.map((job) => (
+                <Marker key={job.id} position={job.coordinates} icon={jobIcon}>
+                  <Popup>
+                    <div className="min-w-[200px]">
+                      <h3 className="font-semibold text-sm mb-1">{job.title}</h3>
+                      <p className="text-xs text-gray-600 mb-2">{job.company}</p>
+                      <div className="flex items-center gap-2 text-xs mb-2">
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin className="w-3 h-3" />
+                          {job.location}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="font-medium">{job.salary}</span>
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                          {job.type}
+                        </span>
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </>
           </MapContainer>
         </div>
         
