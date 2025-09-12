@@ -17,6 +17,7 @@ import {
   Target
 } from "lucide-react";
 import LanguageSwitcher from "../LanguageSwitcher";
+import JobsMap from "../JobsMap";
 
 const JobSeekerDashboard = () => {
   const { t } = useTranslation();
@@ -269,6 +270,13 @@ const JobSeekerDashboard = () => {
                     </div>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+
+            {/* Nearby Jobs Map */}
+            <Card className="shadow-medium animate-slide-up" style={{ animationDelay: "0.3s" }}>
+              <CardContent className="p-0">
+                <JobsMap />
               </CardContent>
             </Card>
           </div>
