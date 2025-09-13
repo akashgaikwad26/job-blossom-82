@@ -8,12 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useTranslation } from 'react-i18next';
 import { User, Mail, Phone, MapPin, Briefcase, Wrench, Star } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface RegistrationFormData {
   fullName: string;
   email: string;
   phone: string;
-  role: 'jobSeeker' | 'employer' | 'franchise';
+  role: 'jobSeeker' | 'employer' | 'franchise' | 'admin';
   location: string;
   experience?: string;
   companyName?: string;
@@ -23,12 +26,34 @@ interface RegistrationFormData {
 
 export const RegistrationForm = () => {
   const { t } = useTranslation();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<RegistrationFormData>();
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<RegistrationFormData>();
   const selectedRole = watch('role');
 
-  const onSubmit = (data: RegistrationFormData) => {
+  const onSubmit = async (data: RegistrationFormData) => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     console.log('Registration data:', data);
-    // This will be connected to Supabase later
+    
+    // Create dummy user from registration data
+    const newUser = {
+      email: data.email,
+      name: data.fullName,
+      role: data.role,
+    };
+    
+    // Auto-login the user after registration
+    login(newUser);
+    toast.success(`Welcome ${data.fullName}! Your account has been created.`);
+    
+    // Navigate based on role
+    if (data.role === 'admin') {
+      navigate('/dashboard/admin');
+    } else {
+      navigate(`/dashboard/${data.role}`);
+    }
   };
 
   return (
@@ -211,15 +236,19 @@ export const RegistrationForm = () => {
               </div>
             )}
 
-            <Button type="submit" className="w-full transition-smooth hover-scale">
-              {t('auth.register.submit', 'Create Account')}
+            <Button 
+              type="submit" 
+              className="w-full transition-smooth hover-scale"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Creating Account...' : t('auth.register.submit', 'Create Account')}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground">
               {t('auth.register.hasAccount', 'Already have an account?')}{' '}
-              <button type="button" className="text-primary hover:underline story-link">
+              <Link to="/login" className="text-primary hover:underline">
                 {t('auth.login.title', 'Sign In')}
-              </button>
+              </Link>
             </p>
           </form>
         </CardContent>
