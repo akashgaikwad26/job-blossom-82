@@ -9,42 +9,25 @@ import WelcomeScreen from "./components/WelcomeScreen";
 import RoleSelection from "./components/RoleSelection";
 import Dashboard from "./components/Dashboard";
 import JobListings from "./components/JobListings";
-import { RegistrationForm } from "./components/forms/RegistrationForm";
-import { LoginForm } from "./components/forms/LoginForm";
-import { MultiStepRegistration } from "./components/forms/MultiStepRegistration";
-import { JobApplicationForm } from "./components/forms/JobApplicationForm";
-import { JobPostingForm } from "./components/forms/JobPostingForm";
-import AdminDashboard from "./components/dashboards/AdminDashboard";
-import ProfileEdit from "./components/ProfileEdit";
-import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<WelcomeScreen />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/register" element={<RegistrationForm />} />
-            <Route path="/register-multistep" element={<MultiStepRegistration />} />
-            <Route path="/role-selection" element={<RoleSelection />} />
-            <Route path="/dashboard/:role" element={<Dashboard />} />
-            <Route path="/dashboard/admin" element={<AdminDashboard />} />
-            <Route path="/profile/edit" element={<ProfileEdit />} />
-            <Route path="/jobs" element={<JobListings />} />
-            <Route path="/jobs/apply/:jobId" element={<JobApplicationForm />} />
-            <Route path="/jobs/post" element={<JobPostingForm />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<WelcomeScreen />} />
+          <Route path="/role-selection" element={<RoleSelection />} />
+          <Route path="/dashboard/:role" element={<Dashboard />} />
+          <Route path="/jobs" element={<JobListings />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
