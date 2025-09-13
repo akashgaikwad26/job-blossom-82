@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Search, 
   BookOpen, 
@@ -13,10 +15,16 @@ import {
   DollarSign,
   Star,
   CheckCircle2,
-  Target
+  Target,
+  Home,
+  FileText,
+  User
 } from "lucide-react";
+import LanguageSwitcher from "../LanguageSwitcher";
+import JobsMap from "../JobsMap";
 
 const JobSeekerDashboard = () => {
+  const { t } = useTranslation();
   const profileCompleteness = 75;
   const preparednessScore = 82;
 
@@ -65,24 +73,49 @@ const JobSeekerDashboard = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-8 animate-fade-in">
           <div>
-            <h1 className="text-3xl font-bold">Welcome back, Alex!</h1>
-            <p className="text-muted-foreground">Let's find your next opportunity</p>
+            <h1 className="text-3xl font-bold">{t("dashboard.jobSeeker.welcome")}</h1>
+            <p className="text-muted-foreground">{t("dashboard.jobSeeker.subtitle")}</p>
           </div>
           <div className="flex gap-3">
+            <LanguageSwitcher />
+            <Button variant="outline" size="sm" onClick={() => window.location.href = "/profile/edit"}>
+              <Search className="w-4 h-4 mr-2" />
+              Edit Profile
+            </Button>
             <Button variant="outline" size="sm">
               <Search className="w-4 h-4 mr-2" />
-              Browse Jobs
+              {t("dashboard.jobSeeker.browseJobs")}
             </Button>
             <Button size="sm">
               <Target className="w-4 h-4 mr-2" />
-              Complete Profile
+              {t("dashboard.jobSeeker.completeProfile")}
             </Button>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+        {/* Tabs Layout */}
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="applications" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              My Applications
+            </TabsTrigger>
+            <TabsTrigger value="map" className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              Job Map
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <User className="w-4 h-4" />
+              Profile & Skills
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
             {/* Quick Stats */}
             <div className="grid grid-cols-3 gap-4 animate-slide-up">
               <Card className="shadow-soft">
@@ -175,55 +208,152 @@ const JobSeekerDashboard = () => {
                 ))}
               </CardContent>
             </Card>
-          </div>
+          </TabsContent>
 
-          {/* Right Sidebar */}
-          <div className="space-y-6">
-            {/* Profile Completeness */}
-            <Card className="shadow-soft animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          {/* Applications Tab */}
+          <TabsContent value="applications" className="space-y-6">
+            <Card className="shadow-medium">
               <CardHeader>
-                <CardTitle className="text-lg">Profile Completeness</CardTitle>
-                <CardDescription>Complete your profile to get better matches</CardDescription>
+                <CardTitle>My Applications</CardTitle>
+                <CardDescription>Track your job applications</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span>Progress</span>
-                      <span>{profileCompleteness}%</span>
+              <CardContent className="space-y-4">
+                {[
+                  {
+                    id: 1,
+                    title: "Senior Electrician",
+                    company: "Metro Construction",
+                    location: "Mumbai, Maharashtra",
+                    appliedDate: "2024-01-20",
+                    status: "interview",
+                    salary: "₹25,000-35,000"
+                  },
+                  {
+                    id: 2,
+                    title: "Electrical Technician",
+                    company: "BuildTech Solutions",
+                    location: "Pune, Maharashtra", 
+                    appliedDate: "2024-01-18",
+                    status: "under-review",
+                    salary: "₹20,000-28,000"
+                  },
+                  {
+                    id: 3,
+                    title: "Maintenance Electrician",
+                    company: "Industrial Corp",
+                    location: "Nashik, Maharashtra",
+                    appliedDate: "2024-01-15",
+                    status: "rejected",
+                    salary: "₹22,000-30,000"
+                  }
+                ].map((application) => (
+                  <div key={application.id} className="border rounded-lg p-4 hover:shadow-soft transition-shadow">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold">{application.title}</h3>
+                        <p className="text-muted-foreground">{application.company}</p>
+                      </div>
+                      <Badge 
+                        variant={
+                          application.status === 'interview' ? 'default' :
+                          application.status === 'under-review' ? 'secondary' : 
+                          'destructive'
+                        }
+                        className={
+                          application.status === 'interview' ? 'bg-success/10 text-success' :
+                          application.status === 'under-review' ? 'bg-warning/10 text-warning' :
+                          'bg-destructive/10 text-destructive'
+                        }
+                      >
+                        {application.status === 'interview' ? 'Interview Scheduled' :
+                         application.status === 'under-review' ? 'Under Review' :
+                         'Not Selected'}
+                      </Badge>
                     </div>
-                    <Progress value={profileCompleteness} className="h-2" />
+                    
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-4 h-4" />
+                        {application.location}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="w-4 h-4" />
+                        {application.salary}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        Applied {application.appliedDate}
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <Button variant="outline" size="sm">View Details</Button>
+                      {application.status === 'interview' && (
+                        <Button size="sm" className="bg-success hover:bg-success/90">
+                          View Interview Details
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Complete Profile
-                  </Button>
-                </div>
+                ))}
               </CardContent>
             </Card>
+          </TabsContent>
 
-            {/* Preparedness Score */}
-            <Card className="shadow-soft animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <CardHeader>
-                <CardTitle className="text-lg">Preparedness Score</CardTitle>
-                <CardDescription>Your readiness for job interviews</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center space-y-4">
-                  <div className="relative w-24 h-24 mx-auto">
-                    <div className="w-24 h-24 rounded-full bg-success/20 flex items-center justify-center">
-                      <span className="text-2xl font-bold text-success">{preparednessScore}</span>
+          {/* Map Tab */}
+          <TabsContent value="map" className="space-y-6">
+            <JobsMap />
+          </TabsContent>
+
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Profile Completeness */}
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <CardTitle className="text-lg">Profile Completeness</CardTitle>
+                  <CardDescription>Complete your profile to get better matches</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>Progress</span>
+                        <span>{profileCompleteness}%</span>
+                      </div>
+                      <Progress value={profileCompleteness} className="h-2" />
+                    </div>
+                    <Button variant="outline" size="sm" className="w-full">
+                      Complete Profile
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Preparedness Score */}
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <CardTitle className="text-lg">Preparedness Score</CardTitle>
+                  <CardDescription>Your readiness for job interviews</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center space-y-4">
+                    <div className="relative w-24 h-24 mx-auto">
+                      <div className="w-24 h-24 rounded-full bg-success/20 flex items-center justify-center">
+                        <span className="text-2xl font-bold text-success">{preparednessScore}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-success">Excellent!</p>
+                      <p className="text-sm text-muted-foreground">You're well-prepared for interviews</p>
                     </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-success">Excellent!</p>
-                    <p className="text-sm text-muted-foreground">You're well-prepared for interviews</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Assessment Progress */}
-            <Card className="shadow-soft animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle className="text-lg">Skill Assessments</CardTitle>
                 <CardDescription>Validate your skills with assessments</CardDescription>
@@ -250,8 +380,8 @@ const JobSeekerDashboard = () => {
                 </Button>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

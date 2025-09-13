@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import JobSeekerDashboard from "./dashboards/JobSeekerDashboard";
 import EmployerDashboard from "./dashboards/EmployerDashboard";
 import FranchiseDashboard from "./dashboards/FranchiseDashboard";
+import AdminDashboard from "./dashboards/AdminDashboard";
+import { VerificationBadge } from "./VerificationBadge";
 
 const Dashboard = () => {
   const { role } = useParams<{ role: string }>();
@@ -9,11 +11,28 @@ const Dashboard = () => {
   const renderDashboard = () => {
     switch (role) {
       case "job-seeker":
-        return <JobSeekerDashboard />;
+        return (
+          <div className="space-y-4">
+            <VerificationBadge />
+            <JobSeekerDashboard />
+          </div>
+        );
       case "employer":
-        return <EmployerDashboard />;
+        return (
+          <div className="space-y-4">
+            <VerificationBadge />
+            <EmployerDashboard />
+          </div>
+        );
       case "franchise":
-        return <FranchiseDashboard />;
+        return (
+          <div className="space-y-4">
+            <VerificationBadge />
+            <FranchiseDashboard />
+          </div>
+        );
+      case "admin":
+        return <AdminDashboard />;
       default:
         return (
           <div className="min-h-screen flex items-center justify-center">

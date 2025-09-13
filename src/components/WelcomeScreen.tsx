@@ -1,27 +1,46 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Users, Building2, Network, Star, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
-import logo from "@/assets/logo.png";
+import praviCafeLogo from "@/assets/pravi-cafe-logo.png";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const WelcomeScreen = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedAuthMethod, setSelectedAuthMethod] = useState<string>("");
 
   const authMethods = [
-    { id: "email", label: "Continue with Email", icon: "📧" },
-    { id: "phone", label: "Continue with Phone", icon: "📱" },
-    { id: "google", label: "Continue with Google", icon: "🔍" },
+    { id: "email", label: t("welcome.continueWith.email"), icon: "📧" },
+    { id: "phone", label: t("welcome.continueWith.phone"), icon: "📱" },
+    { id: "google", label: t("welcome.continueWith.google"), icon: "🔍" },
   ];
 
   const features = [
-    { icon: Users, title: "Smart Matching", desc: "AI-powered job recommendations" },
-    { icon: Building2, title: "Verified Companies", desc: "Trusted employer network" },
-    { icon: Network, title: "Skill Assessment", desc: "Validate your expertise" },
-    { icon: Star, title: "Career Growth", desc: "Track your progress" },
+    { 
+      icon: Users, 
+      title: t("welcome.features.smartMatching.title"), 
+      desc: t("welcome.features.smartMatching.desc") 
+    },
+    { 
+      icon: Building2, 
+      title: t("welcome.features.verifiedCompanies.title"), 
+      desc: t("welcome.features.verifiedCompanies.desc") 
+    },
+    { 
+      icon: Network, 
+      title: t("welcome.features.skillAssessment.title"), 
+      desc: t("welcome.features.skillAssessment.desc") 
+    },
+    { 
+      icon: Star, 
+      title: t("welcome.features.careerGrowth.title"), 
+      desc: t("welcome.features.careerGrowth.desc") 
+    },
   ];
 
   return (
@@ -30,13 +49,15 @@ const WelcomeScreen = () => {
         {/* Header */}
         <header className="flex items-center justify-between mb-12 animate-fade-in">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="JobConnect" className="w-10 h-10 rounded-lg" />
-            <h1 className="text-2xl font-bold text-white">JobConnect</h1>
+            <img src={praviCafeLogo} alt="Pravi Cafe" className="h-10" />
           </div>
-          <Badge variant="secondary" className="shadow-soft">
-            <CheckCircle2 className="w-4 h-4 mr-1" />
-            Trusted by 10K+ professionals
-          </Badge>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <Badge variant="secondary" className="shadow-soft">
+              <CheckCircle2 className="w-4 h-4 mr-1" />
+              {t("welcome.trusted")}
+            </Badge>
+          </div>
         </header>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -44,21 +65,20 @@ const WelcomeScreen = () => {
           <div className="space-y-8 animate-slide-up">
             <div className="space-y-4">
               <h2 className="text-5xl font-bold text-white leading-tight">
-                Find Your Dream Job
-                <span className="block text-secondary">with Confidence</span>
+                {t("welcome.title")}
+                <span className="block text-secondary">{t("welcome.subtitle")}</span>
               </h2>
               <p className="text-xl text-white/80 leading-relaxed">
-                Connect with top employers, showcase your skills through assessments, 
-                and accelerate your career journey with personalized recommendations.
+                {t("welcome.description")}
               </p>
             </div>
 
             {/* Auth Methods */}
             <Card className="shadow-large border-white/20 bg-white/10 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-white">Get Started Today</CardTitle>
+                <CardTitle className="text-white">{t("welcome.getStarted")}</CardTitle>
                 <CardDescription className="text-white/70">
-                  Choose your preferred way to join thousands of professionals
+                  {t("welcome.chooseMethod")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -80,6 +100,26 @@ const WelcomeScreen = () => {
                 ))}
               </CardContent>
             </Card>
+
+            {/* Registration Button */}
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="flex-1 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300"
+                onClick={() => navigate("/register-multistep")}
+              >
+                {t("auth.register.title", "Create Account")}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="flex-1 bg-white/20 border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300"
+                onClick={() => navigate("/login")}
+              >
+                {t("auth.login.title", "Sign In")}
+              </Button>
+            </div>
 
             {/* Features Grid */}
             <div className="grid grid-cols-2 gap-4">
@@ -112,15 +152,15 @@ const WelcomeScreen = () => {
         <div className="grid grid-cols-3 gap-8 mt-16 animate-fade-in" style={{ animationDelay: "0.6s" }}>
           <div className="text-center">
             <div className="text-3xl font-bold text-white">5K+</div>
-            <div className="text-white/70">Active Jobs</div>
+            <div className="text-white/70">{t("welcome.stats.jobs")}</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-white">2K+</div>
-            <div className="text-white/70">Companies</div>
+            <div className="text-white/70">{t("welcome.stats.companies")}</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-white">95%</div>
-            <div className="text-white/70">Success Rate</div>
+            <div className="text-white/70">{t("welcome.stats.successRate")}</div>
           </div>
         </div>
       </div>
