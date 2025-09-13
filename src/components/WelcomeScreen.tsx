@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Users, Building2, Network, Star, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
-import logo from "@/assets/logo.png";
+import praviCafeLogo from "@/assets/pravi-cafe-logo.png";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const WelcomeScreen = () => {
@@ -49,8 +49,7 @@ const WelcomeScreen = () => {
         {/* Header */}
         <header className="flex items-center justify-between mb-12 animate-fade-in">
           <div className="flex items-center gap-3">
-            <img src={logo} alt="JobConnect" className="w-10 h-10 rounded-lg" />
-            <h1 className="text-2xl font-bold text-white">JobConnect</h1>
+            <img src={praviCafeLogo} alt="Pravi Cafe" className="h-10" />
           </div>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />

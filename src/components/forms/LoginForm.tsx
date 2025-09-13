@@ -9,6 +9,7 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LoginFormData {
   email: string;
@@ -26,6 +27,7 @@ const DUMMY_USERS = [
 export const LoginForm = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>();
 
@@ -34,19 +36,23 @@ export const LoginForm = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Check dummy users
-    const user = DUMMY_USERS.find(u => u.email === data.email && u.password === data.password);
+    const demoUser = DUMMY_USERS.find(u => u.email === data.email && u.password === data.password);
     
-    if (user) {
-      // Store user in localStorage for demo purposes
-      localStorage.setItem('demoUser', JSON.stringify(user));
+    if (demoUser) {
+      login({
+        email: data.email,
+        name: demoUser.name,
+        role: demoUser.role,
+        isVerified: demoUser.role === 'admin', // Admin users are pre-verified
+      });
       
-      toast.success(`Welcome back, ${user.name}!`);
+      toast.success(`Welcome back, ${demoUser.name}!`);
       
       // Navigate based on role
-      if (user.role === 'admin') {
+      if (demoUser.role === 'admin') {
         navigate('/dashboard/admin');
       } else {
-        navigate(`/dashboard/${user.role}`);
+        navigate(`/dashboard/${demoUser.role}`);
       }
     } else {
       toast.error('Invalid email or password. Try jobseeker@demo.com / password123');

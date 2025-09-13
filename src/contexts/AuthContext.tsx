@@ -4,6 +4,7 @@ interface User {
   email: string;
   role: string;
   name: string;
+  isVerified: boolean;
 }
 
 interface AuthContextType {

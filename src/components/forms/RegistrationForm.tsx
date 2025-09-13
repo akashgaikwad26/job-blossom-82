@@ -42,6 +42,7 @@ export const RegistrationForm = () => {
       email: data.email,
       name: data.fullName,
       role: data.role,
+      isVerified: false, // New users are not verified by default
     };
     
     // Auto-login the user after registration
