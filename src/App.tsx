@@ -16,6 +16,7 @@ import { JobApplicationForm } from "./components/forms/JobApplicationForm";
 import { JobPostingForm } from "./components/forms/JobPostingForm";
 import AdminDashboard from "./components/dashboards/AdminDashboard";
 import ProfileEdit from "./components/ProfileEdit";
+import AssessmentPage from "./pages/AssessmentPage";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/jobs" element={<JobListings />} />
             <Route path="/jobs/apply/:jobId" element={<JobApplicationForm />} />
             <Route path="/jobs/post" element={<JobPostingForm />} />
+            <Route path="/assessment/:assessmentId" element={<AssessmentPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

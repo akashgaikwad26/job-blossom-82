@@ -115,27 +115,14 @@ const JobSeekerDashboard = () => {
 
   // Handle starting an assessment
   const handleStartAssessment = (assessmentId: number) => {
-    setAssessments(prev => 
-      prev.map(assessment => 
-        assessment.id === assessmentId && assessment.unlocked && assessment.status === "available"
-          ? { ...assessment, status: "in-progress", progress: 10 }
-          : assessment
-      )
-    );
+    // Navigate to assessment page
+    window.location.href = `/assessment/${assessmentId}`;
   };
 
-  // Handle completing an assessment (demo functionality)
-  const handleCompleteAssessment = (assessmentId: number) => {
-    setAssessments(prev => {
-      const updated = prev.map(assessment => 
-        assessment.id === assessmentId
-          ? { ...assessment, status: "completed", progress: 100, score: Math.floor(Math.random() * 30) + 70 }
-          : assessment
-      );
-      return updated;
-    });
-    // Update unlock status after completion
-    setTimeout(updateUnlockStatus, 100);
+  // Handle continuing an assessment
+  const handleContinueAssessment = (assessmentId: number) => {
+    // Navigate to assessment page
+    window.location.href = `/assessment/${assessmentId}`;
   };
 
   React.useEffect(() => {
@@ -433,23 +420,21 @@ const JobSeekerDashboard = () => {
                 <CardTitle className="text-lg">Skill Assessments</CardTitle>
                 <CardDescription>Complete modules progressively to unlock advanced skills</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {assessments.map((assessment, index) => (
-                  <div key={assessment.id} className={`border rounded-lg p-4 transition-all ${
-                    assessment.unlocked ? 'bg-background hover:shadow-soft' : 'bg-muted/30 opacity-60'
-                  }`}>
-                    <div className="flex justify-between items-center mb-3">
-                      <div className="flex items-center gap-3">
-                        {assessment.status === "locked" ? (
-                          <Lock className="w-5 h-5 text-muted-foreground" />
-                        ) : assessment.status === "completed" ? (
-                          <CheckCircle2 className="w-5 h-5 text-success" />
-                        ) : (
-                          <Play className="w-5 h-5 text-primary" />
-                        )}
-                        <span className="font-medium">{assessment.title}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
+              <CardContent>
+                <div className="max-h-48 overflow-y-auto space-y-3 mb-4">
+                  {assessments.slice(0, 3).map((assessment, index) => (
+                    <div key={assessment.id} className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          {assessment.status === "locked" ? (
+                            <Lock className="w-4 h-4 text-muted-foreground" />
+                          ) : assessment.status === "completed" ? (
+                            <CheckCircle2 className="w-4 h-4 text-success" />
+                          ) : (
+                            <Play className="w-4 h-4 text-primary" />
+                          )}
+                          <span className="text-sm font-medium">{assessment.title}</span>
+                        </div>
                         {assessment.status === "completed" && (
                           <Badge variant="secondary" className="bg-success/10 text-success text-xs">
                             <Star className="w-3 h-3 mr-1" />
@@ -462,59 +447,119 @@ const JobSeekerDashboard = () => {
                           </Badge>
                         )}
                       </div>
-                    </div>
-                    
-                    <div className="space-y-2 mb-3">
-                      <Progress value={assessment.progress} className="h-2" />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>{assessment.progress}% complete</span>
-                        {assessment.status === "locked" && (
-                          <span>Complete previous module to unlock</span>
+                      <Progress value={assessment.progress} className="h-1" />
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">{assessment.progress}% complete</span>
+                        {assessment.status === "locked" ? (
+                          <Button variant="ghost" size="sm" disabled className="cursor-not-allowed h-6 px-2 text-xs">
+                            <Lock className="w-3 h-3 mr-1" />
+                            Locked
+                          </Button>
+                        ) : assessment.status === "available" ? (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => handleStartAssessment(assessment.id)}
+                          >
+                            <Play className="w-3 h-3 mr-1" />
+                            Start
+                          </Button>
+                        ) : assessment.status === "in-progress" ? (
+                          <Button 
+                            variant="default" 
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => handleContinueAssessment(assessment.id)}
+                          >
+                            <BookOpen className="w-3 h-3 mr-1" />
+                            Continue
+                          </Button>
+                        ) : (
+                          <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                            <CheckCircle2 className="w-3 h-3 mr-1" />
+                            Completed
+                          </Badge>
                         )}
                       </div>
+                      {index < Math.min(assessments.length, 3) - 1 && <Separator className="mt-2" />}
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      {assessment.status === "locked" ? (
-                        <Button variant="ghost" size="sm" disabled className="cursor-not-allowed">
-                          <Lock className="w-4 h-4 mr-2" />
-                          Locked
-                        </Button>
-                      ) : assessment.status === "available" ? (
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleStartAssessment(assessment.id)}
-                        >
-                          <Play className="w-4 h-4 mr-2" />
-                          Start Assessment
-                        </Button>
-                      ) : assessment.status === "in-progress" ? (
-                        <Button 
-                          variant="default" 
-                          size="sm"
-                          onClick={() => handleCompleteAssessment(assessment.id)}
-                        >
-                          <BookOpen className="w-4 h-4 mr-2" />
-                          Continue
-                        </Button>
-                      ) : (
-                        <Badge variant="secondary" className="bg-success/10 text-success">
-                          <CheckCircle2 className="w-4 h-4 mr-1" />
-                          Completed
-                        </Badge>
-                      )}
-                      
-                      {assessment.status === "completed" && (
-                        <Button variant="ghost" size="sm">
-                          View Certificate
-                        </Button>
-                      )}
-                    </div>
-                    
-                    {index < assessments.length - 1 && <Separator className="mt-4" />}
-                  </div>
-                ))}
+                  ))}
+                  {assessments.length > 3 && (
+                    <>
+                      <Separator />
+                      <div className="max-h-32 overflow-y-auto space-y-3">
+                        {assessments.slice(3).map((assessment, index) => (
+                          <div key={assessment.id} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                {assessment.status === "locked" ? (
+                                  <Lock className="w-4 h-4 text-muted-foreground" />
+                                ) : assessment.status === "completed" ? (
+                                  <CheckCircle2 className="w-4 h-4 text-success" />
+                                ) : (
+                                  <Play className="w-4 h-4 text-primary" />
+                                )}
+                                <span className="text-sm font-medium">{assessment.title}</span>
+                              </div>
+                              {assessment.status === "completed" && (
+                                <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                                  <Star className="w-3 h-3 mr-1" />
+                                  {assessment.score}
+                                </Badge>
+                              )}
+                              {assessment.status === "locked" && (
+                                <Badge variant="outline" className="text-xs">
+                                  Locked
+                                </Badge>
+                              )}
+                            </div>
+                            <Progress value={assessment.progress} className="h-1" />
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-muted-foreground">{assessment.progress}% complete</span>
+                              {assessment.status === "locked" ? (
+                                <Button variant="ghost" size="sm" disabled className="cursor-not-allowed h-6 px-2 text-xs">
+                                  <Lock className="w-3 h-3 mr-1" />
+                                  Locked
+                                </Button>
+                              ) : assessment.status === "available" ? (
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  className="h-6 px-2 text-xs"
+                                  onClick={() => handleStartAssessment(assessment.id)}
+                                >
+                                  <Play className="w-3 h-3 mr-1" />
+                                  Start
+                                </Button>
+                              ) : assessment.status === "in-progress" ? (
+                                <Button 
+                                  variant="default" 
+                                  size="sm"
+                                  className="h-6 px-2 text-xs"
+                                  onClick={() => handleContinueAssessment(assessment.id)}
+                                >
+                                  <BookOpen className="w-3 h-3 mr-1" />
+                                  Continue
+                                </Button>
+                              ) : (
+                                <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                                  Completed
+                                </Badge>
+                              )}
+                            </div>
+                            {index < assessments.slice(3).length - 1 && <Separator className="mt-2" />}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <Button variant="outline" size="sm" className="w-full">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  View All Assessments
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
