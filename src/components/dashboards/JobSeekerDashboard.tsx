@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,9 @@ import {
   Target,
   Home,
   FileText,
-  User
+  User,
+  Lock,
+  Play
 } from "lucide-react";
 import LanguageSwitcher from "../LanguageSwitcher";
 import JobsMap from "../JobsMap";
@@ -61,11 +64,83 @@ const JobSeekerDashboard = () => {
     }
   ];
 
-  const assessments = [
-    { title: "JavaScript Fundamentals", progress: 100, score: 85, status: "completed" },
-    { title: "React Development", progress: 60, score: null, status: "in-progress" },
-    { title: "System Design", progress: 0, score: null, status: "available" }
-  ];
+  const [assessments, setAssessments] = useState([
+    { 
+      id: 1,
+      title: "JavaScript Fundamentals", 
+      progress: 100, 
+      score: 85, 
+      status: "completed",
+      unlocked: true 
+    },
+    { 
+      id: 2,
+      title: "React Development", 
+      progress: 60, 
+      score: null, 
+      status: "in-progress",
+      unlocked: true 
+    },
+    { 
+      id: 3,
+      title: "System Design", 
+      progress: 0, 
+      score: null, 
+      status: "locked",
+      unlocked: false 
+    },
+    { 
+      id: 4,
+      title: "Node.js Backend", 
+      progress: 0, 
+      score: null, 
+      status: "locked",
+      unlocked: false 
+    }
+  ]);
+
+  // Check and update unlock status based on completion
+  const updateUnlockStatus = () => {
+    setAssessments(prev => {
+      const updated = [...prev];
+      for (let i = 1; i < updated.length; i++) {
+        const previousCompleted = updated[i - 1].status === "completed";
+        if (previousCompleted && !updated[i].unlocked) {
+          updated[i] = { ...updated[i], unlocked: true, status: "available" };
+        }
+      }
+      return updated;
+    });
+  };
+
+  // Handle starting an assessment
+  const handleStartAssessment = (assessmentId: number) => {
+    setAssessments(prev => 
+      prev.map(assessment => 
+        assessment.id === assessmentId && assessment.unlocked && assessment.status === "available"
+          ? { ...assessment, status: "in-progress", progress: 10 }
+          : assessment
+      )
+    );
+  };
+
+  // Handle completing an assessment (demo functionality)
+  const handleCompleteAssessment = (assessmentId: number) => {
+    setAssessments(prev => {
+      const updated = prev.map(assessment => 
+        assessment.id === assessmentId
+          ? { ...assessment, status: "completed", progress: 100, score: Math.floor(Math.random() * 30) + 70 }
+          : assessment
+      );
+      return updated;
+    });
+    // Update unlock status after completion
+    setTimeout(updateUnlockStatus, 100);
+  };
+
+  React.useEffect(() => {
+    updateUnlockStatus();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -356,28 +431,90 @@ const JobSeekerDashboard = () => {
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle className="text-lg">Skill Assessments</CardTitle>
-                <CardDescription>Validate your skills with assessments</CardDescription>
+                <CardDescription>Complete modules progressively to unlock advanced skills</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
                 {assessments.map((assessment, index) => (
-                  <div key={assessment.title} className="space-y-2">
+                  <div key={assessment.id} className={`border rounded-lg p-4 transition-all ${
+                    assessment.unlocked ? 'bg-background hover:shadow-soft' : 'bg-muted/30 opacity-60'
+                  }`}>
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="flex items-center gap-3">
+                        {assessment.status === "locked" ? (
+                          <Lock className="w-5 h-5 text-muted-foreground" />
+                        ) : assessment.status === "completed" ? (
+                          <CheckCircle2 className="w-5 h-5 text-success" />
+                        ) : (
+                          <Play className="w-5 h-5 text-primary" />
+                        )}
+                        <span className="font-medium">{assessment.title}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {assessment.status === "completed" && (
+                          <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                            <Star className="w-3 h-3 mr-1" />
+                            {assessment.score}
+                          </Badge>
+                        )}
+                        {assessment.status === "locked" && (
+                          <Badge variant="outline" className="text-xs">
+                            Locked
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 mb-3">
+                      <Progress value={assessment.progress} className="h-2" />
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>{assessment.progress}% complete</span>
+                        {assessment.status === "locked" && (
+                          <span>Complete previous module to unlock</span>
+                        )}
+                      </div>
+                    </div>
+
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">{assessment.title}</span>
-                      {assessment.status === "completed" && (
-                        <Badge variant="secondary" className="bg-success/10 text-success text-xs">
-                          <Star className="w-3 h-3 mr-1" />
-                          {assessment.score}
+                      {assessment.status === "locked" ? (
+                        <Button variant="ghost" size="sm" disabled className="cursor-not-allowed">
+                          <Lock className="w-4 h-4 mr-2" />
+                          Locked
+                        </Button>
+                      ) : assessment.status === "available" ? (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleStartAssessment(assessment.id)}
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          Start Assessment
+                        </Button>
+                      ) : assessment.status === "in-progress" ? (
+                        <Button 
+                          variant="default" 
+                          size="sm"
+                          onClick={() => handleCompleteAssessment(assessment.id)}
+                        >
+                          <BookOpen className="w-4 h-4 mr-2" />
+                          Continue
+                        </Button>
+                      ) : (
+                        <Badge variant="secondary" className="bg-success/10 text-success">
+                          <CheckCircle2 className="w-4 h-4 mr-1" />
+                          Completed
                         </Badge>
                       )}
+                      
+                      {assessment.status === "completed" && (
+                        <Button variant="ghost" size="sm">
+                          View Certificate
+                        </Button>
+                      )}
                     </div>
-                    <Progress value={assessment.progress} className="h-1" />
-                    {index < assessments.length - 1 && <Separator className="mt-3" />}
+                    
+                    {index < assessments.length - 1 && <Separator className="mt-4" />}
                   </div>
                 ))}
-                <Button variant="outline" size="sm" className="w-full mt-4">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Take Assessment
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
