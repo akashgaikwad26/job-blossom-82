@@ -21,7 +21,9 @@ import {
   FileText,
   User,
   Lock,
-  Play
+  Play,
+  Brain,
+  ArrowRight
 } from "lucide-react";
 import LanguageSwitcher from "../LanguageSwitcher";
 import JobsMap from "../JobsMap";
@@ -157,7 +159,7 @@ const JobSeekerDashboard = () => {
 
         {/* Tabs Layout */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Home className="w-4 h-4" />
               Overview
@@ -165,6 +167,10 @@ const JobSeekerDashboard = () => {
             <TabsTrigger value="applications" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
               My Applications
+            </TabsTrigger>
+            <TabsTrigger value="preparedness" className="flex items-center gap-2">
+              <Brain className="w-4 h-4" />
+              Preparedness
             </TabsTrigger>
             <TabsTrigger value="map" className="flex items-center gap-2">
               <MapPin className="w-4 h-4" />
@@ -358,6 +364,184 @@ const JobSeekerDashboard = () => {
                     </div>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Preparedness Tab */}
+          <TabsContent value="preparedness" className="space-y-6">
+            {/* Preparedness Score Bar */}
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="text-xl">Interview Preparedness Score</CardTitle>
+                <CardDescription>Your overall readiness for job interviews</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-medium">Overall Score</span>
+                    <span className="text-2xl font-bold text-success">{preparednessScore}/100</span>
+                  </div>
+                  <Progress value={preparednessScore} className="h-3" />
+                  <div className="grid grid-cols-3 gap-4 mt-6">
+                    <div className="text-center">
+                      <div className="text-lg font-semibold text-success">85</div>
+                      <div className="text-sm text-muted-foreground">Technical Skills</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-semibold text-warning">72</div>
+                      <div className="text-sm text-muted-foreground">Communication</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-lg font-semibold text-primary">90</div>
+                      <div className="text-sm text-muted-foreground">Industry Knowledge</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Prep Modules */}
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="text-xl">Preparation Modules</CardTitle>
+                <CardDescription>Complete these modules to improve your interview readiness</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {[
+                    {
+                      id: 1,
+                      title: "Technical Interview Prep",
+                      description: "Practice coding problems and system design",
+                      progress: 75,
+                      icon: "🔧",
+                      status: "in-progress"
+                    },
+                    {
+                      id: 2,
+                      title: "Behavioral Questions",
+                      description: "Master common behavioral interview questions",
+                      progress: 100,
+                      icon: "💬",
+                      status: "completed"
+                    },
+                    {
+                      id: 3,
+                      title: "Industry Knowledge",
+                      description: "Stay updated with latest industry trends",
+                      progress: 60,
+                      icon: "📚",
+                      status: "in-progress"
+                    },
+                    {
+                      id: 4,
+                      title: "Company Research",
+                      description: "Learn how to research potential employers",
+                      progress: 0,
+                      icon: "🏢",
+                      status: "not-started"
+                    }
+                  ].map((module) => (
+                    <div key={module.id} className="border rounded-lg p-4 hover:shadow-soft transition-shadow">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="text-2xl">{module.icon}</div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold">{module.title}</h3>
+                          <p className="text-sm text-muted-foreground">{module.description}</p>
+                        </div>
+                        <Badge 
+                          variant={module.status === 'completed' ? 'default' : module.status === 'in-progress' ? 'secondary' : 'outline'}
+                          className={
+                            module.status === 'completed' ? 'bg-success/10 text-success' :
+                            module.status === 'in-progress' ? 'bg-primary/10 text-primary' :
+                            'border-muted-foreground/20'
+                          }
+                        >
+                          {module.status === 'completed' ? 'Completed' :
+                           module.status === 'in-progress' ? 'In Progress' :
+                           'Not Started'}
+                        </Badge>
+                      </div>
+                      
+                      {module.progress > 0 && (
+                        <div className="mb-3">
+                          <div className="flex justify-between text-xs mb-1">
+                            <span>Progress</span>
+                            <span>{module.progress}%</span>
+                          </div>
+                          <Progress value={module.progress} className="h-1" />
+                        </div>
+                      )}
+                      
+                      <Button 
+                        variant={module.status === 'completed' ? 'outline' : 'default'} 
+                        size="sm" 
+                        className="w-full"
+                      >
+                        {module.status === 'completed' ? 'Review' :
+                         module.status === 'in-progress' ? 'Continue' :
+                         'Start Module'}
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Mock Assessment */}
+            <Card className="shadow-soft">
+              <CardHeader>
+                <CardTitle className="text-xl">Quick Assessment</CardTitle>
+                <CardDescription>Test your knowledge with these sample questions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Question 1 */}
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-semibold mb-2">1. What is your greatest strength as a professional?</h4>
+                    <div className="space-y-2">
+                      {['Problem-solving abilities', 'Team collaboration', 'Technical expertise', 'Leadership skills'].map((option, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                          <input type="radio" name="q1" id={`q1-${idx}`} className="text-primary" />
+                          <label htmlFor={`q1-${idx}`} className="text-sm cursor-pointer">{option}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Question 2 */}
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-semibold mb-2">2. How do you handle working under pressure?</h4>
+                    <div className="space-y-2">
+                      {['I prioritize tasks and stay organized', 'I work better under pressure', 'I take breaks to manage stress', 'I communicate with my team for support'].map((option, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                          <input type="radio" name="q2" id={`q2-${idx}`} className="text-primary" />
+                          <label htmlFor={`q2-${idx}`} className="text-sm cursor-pointer">{option}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Question 3 */}
+                  <div className="border rounded-lg p-4">
+                    <h4 className="font-semibold mb-2">3. Where do you see yourself in 5 years?</h4>
+                    <div className="space-y-2">
+                      {['Leading a team in my field', 'Mastering advanced technical skills', 'Starting my own business', 'Mentoring junior professionals'].map((option, idx) => (
+                        <div key={idx} className="flex items-center space-x-2">
+                          <input type="radio" name="q3" id={`q3-${idx}`} className="text-primary" />
+                          <label htmlFor={`q3-${idx}`} className="text-sm cursor-pointer">{option}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 justify-end">
+                    <Button variant="outline">Save Draft</Button>
+                    <Button>Submit Assessment</Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
